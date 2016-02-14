@@ -23,60 +23,84 @@ namespace RockPaperScissors.Tasks.Infrastructure
         {
             if (command == null) throw new ArgumentNullException(nameof(command));
             var commandType = command.GetType();
-            var action = _commandDelegates.GetOrAdd(commandType, x =>
-            {
-                var mediatorParam = Expression.Parameter(typeof (Mediator), "mediator");
-                var commandParam = Expression.Parameter(typeof (ICommand), "command");
-                var castOperation = Expression.Convert(commandParam, commandType);
-                var call = Expression.Call(mediatorParam,
-                    "ExecuteCommand", new[] {commandType},
-                    castOperation);
-                var lambda = Expression.Lambda<Action<Mediator, ICommand>>(call, mediatorParam, commandParam);
-                Console.WriteLine(lambda.ToString());
-                return lambda.Compile();
-            });
+            var action = _commandDelegates.GetOrAdd(commandType, GenerateCommandDelegate);
             action(this, command);
         }
 
+
+        private Action<Mediator, ICommand> GenerateCommandDelegate(Type commandType)
+        {
+            var mediatorParam = Expression.Parameter(typeof(Mediator), "mediator");
+            var commandParam = Expression.Parameter(typeof(ICommand), "command");
+            var castOperation = Expression.Convert(commandParam, commandType);
+            var action = new Action<ICommand>(ExecuteCommand);
+
+            var mi = action.Method
+                .GetGenericMethodDefinition()
+                .MakeGenericMethod(commandType);
+
+            var call = Expression.Call(mediatorParam, mi, castOperation);
+            var lambda = Expression.Lambda<Action<Mediator, ICommand>>(call, mediatorParam, commandParam);
+            Console.WriteLine(lambda.ToString());
+            return lambda.Compile();
+        }
 
         public TId Send<TId>(ICreateCommand<TId> command)
         {
             if (command == null) throw new ArgumentNullException(nameof(command));
             var commandType = command.GetType();
-            var func = _createCommandDelegates.GetOrAdd(Tuple.Create(commandType, typeof (TId)), x =>
-            {
-                var mediatorParam = Expression.Parameter(typeof(Mediator), "mediator");
-                var commandParam = Expression.Parameter(typeof(ICommand), "command");
-                var castOperation = Expression.Convert(commandParam, commandType);
-                var call = Expression.Call(mediatorParam,
-                    "ExecuteCreateCommand", new[] { commandType, typeof(TId) },
-                    castOperation);
-                var castResult = Expression.Convert(call, typeof (object));
-                var lambda = Expression.Lambda<Func<Mediator, ICommand, object>>(castResult, mediatorParam, commandParam);
-                Console.WriteLine(lambda.ToString());
-                return lambda.Compile();
-            });
+            var func = _createCommandDelegates.GetOrAdd(Tuple.Create(commandType, typeof (TId)), GenerateCommandDelegate);
             return (TId) func(this, command);
+        }
+
+        private Func<Mediator, ICommand, object> GenerateCommandDelegate(Tuple<Type, Type> io)
+        {
+            var commandType = io.Item1;
+            var returnType = io.Item2;
+
+            var mediatorParam = Expression.Parameter(typeof(Mediator), "mediator");
+            var commandParam = Expression.Parameter(typeof(ICommand), "command");
+            var castOperation = Expression.Convert(commandParam, commandType);
+
+            var func = new Func<DummyCreateCommand, object>(ExecuteCreateCommand<DummyCreateCommand, object>);
+            var mi = func.Method
+                .GetGenericMethodDefinition()
+                .MakeGenericMethod(commandType, returnType);
+
+            var call = Expression.Call(mediatorParam, mi, castOperation);
+            var castResult = Expression.Convert(call, typeof(object));
+            var lambda = Expression.Lambda<Func<Mediator, ICommand, object>>(castResult, mediatorParam, commandParam);
+            Console.WriteLine(lambda.ToString());
+            return lambda.Compile();
         }
 
         public TResult Query<TResult>(IQuery<TResult> query)
         {
             if (query == null) throw new ArgumentNullException(nameof(query));
             var queryType = query.GetType();
-            var func = _queryDelegates.GetOrAdd(Tuple.Create(queryType, typeof (TResult)), x =>
-            {
-                var mediatorParam = Expression.Parameter(typeof(Mediator), "mediator");
-                var queryParam = Expression.Parameter(typeof(IQuery), "query");
-                var castOperation = Expression.Convert(queryParam, queryType);
-                var call = Expression.Call(mediatorParam,
-                    "ExecuteQuery", new[] { queryType, typeof(TResult) },
-                    castOperation);
-                var boxingOperation = Expression.Convert(call, typeof (object));
-                var lambda = Expression.Lambda<Func<Mediator, IQuery, object>>(boxingOperation, mediatorParam, queryParam);
-                Console.WriteLine(lambda.ToString());
-                return lambda.Compile();
-            });
+            var func = _queryDelegates.GetOrAdd(Tuple.Create(queryType, typeof (TResult)), GenerateQueryDelegate);
             return (TResult) func(this, query);
+        }
+
+        private Func<Mediator, IQuery, object> GenerateQueryDelegate(Tuple<Type, Type> io)
+        {
+            var queryType = io.Item1;
+            var returnType = io.Item2;
+
+            var mediatorParam = Expression.Parameter(typeof(Mediator), "mediator");
+            var queryParam = Expression.Parameter(typeof(IQuery), "query");
+            var castOperation = Expression.Convert(queryParam, queryType);
+
+            var func = new Func<DummyQuery, object>(ExecuteQuery<DummyQuery, object>);
+            var mi = func.Method
+                .GetGenericMethodDefinition()
+                .MakeGenericMethod(queryType, returnType);
+
+            var call = Expression.Call(mediatorParam, mi, castOperation);
+            var castResult = Expression.Convert(call, typeof(object));
+            var lambda = Expression.Lambda<Func<Mediator, IQuery, object>>(castResult, mediatorParam, queryParam);
+            Console.WriteLine(lambda.ToString());
+            return lambda.Compile();
         }
 
         private void ExecuteCommand<TCommand>(TCommand command) where TCommand : ICommand
@@ -108,6 +132,20 @@ namespace RockPaperScissors.Tasks.Infrastructure
         private THandler CreateInstance<THandler>()
         {
             return (THandler) _singleInstanceFactory(typeof (THandler));
+        }
+
+        /// <remarks>
+        /// For getting a compile-time reference to ExecuteCreateCommand inside GenerateCommandDelegate
+        /// </remarks>
+        private class DummyCreateCommand : ICreateCommand<object>
+        {
+        }
+
+        /// <remarks>
+        /// For getting a compile-time reference to ExecuteQuery inside GenerateQueryDelegate
+        /// </remarks>
+        private class DummyQuery : IQuery<object>
+        {
         }
 
     }
