@@ -41,7 +41,6 @@ namespace RockPaperScissors.Tasks.Infrastructure
 
             var call = Expression.Call(mediatorParam, mi, castOperation);
             var lambda = Expression.Lambda<Action<Mediator, ICommand>>(call, mediatorParam, commandParam);
-            Console.WriteLine(lambda.ToString());
             return lambda.Compile();
         }
 
@@ -70,7 +69,6 @@ namespace RockPaperScissors.Tasks.Infrastructure
             var call = Expression.Call(mediatorParam, mi, castOperation);
             var castResult = Expression.Convert(call, typeof(object));
             var lambda = Expression.Lambda<Func<Mediator, ICommand, object>>(castResult, mediatorParam, commandParam);
-            Console.WriteLine(lambda.ToString());
             return lambda.Compile();
         }
 
@@ -99,13 +97,11 @@ namespace RockPaperScissors.Tasks.Infrastructure
             var call = Expression.Call(mediatorParam, mi, castOperation);
             var castResult = Expression.Convert(call, typeof(object));
             var lambda = Expression.Lambda<Func<Mediator, IQuery, object>>(castResult, mediatorParam, queryParam);
-            Console.WriteLine(lambda.ToString());
             return lambda.Compile();
         }
 
         private void ExecuteCommand<TCommand>(TCommand command) where TCommand : ICommand
         {
-            Console.WriteLine("Executing command " + typeof(TCommand));
             if (command == null) throw new ArgumentNullException(nameof(command));
             var handler = CreateInstance<ICommandHandler<TCommand>>();
             handler.Handle(command);
@@ -113,7 +109,6 @@ namespace RockPaperScissors.Tasks.Infrastructure
 
         private TId ExecuteCreateCommand<TCommand, TId>(TCommand command) where TCommand : ICreateCommand<TId>
         {
-            Console.WriteLine("Executing command " + typeof(TCommand));
             if (command == null) throw new ArgumentNullException(nameof(command));
             var handler = CreateInstance<ICommandHandler<TCommand, TId>>();
             var id = handler.Handle(command);
@@ -122,7 +117,6 @@ namespace RockPaperScissors.Tasks.Infrastructure
 
         private TResult ExecuteQuery<TQuery, TResult>(TQuery query) where TQuery : IQuery<TResult>
         {
-            Console.WriteLine("Executing query " + typeof(TQuery));
             if (query == null) throw new ArgumentNullException(nameof(query));
             var handler = CreateInstance<IQueryHandler<TQuery, TResult>>();
             var result = handler.Handle(query);
