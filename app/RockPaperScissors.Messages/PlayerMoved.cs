@@ -1,6 +1,6 @@
 ﻿namespace RockPaperScissors.Messages
 {
-    public class PlayerMoved : IEvent 
+    public class PlayerMoved : IPlayerEvent, IGameEvent 
     {
 
         public int GameId { get; set; }

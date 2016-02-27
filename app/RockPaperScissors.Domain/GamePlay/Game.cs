@@ -125,7 +125,11 @@ namespace RockPaperScissors.Domain.GamePlay
             {
                 if (player == null) throw new ArgumentNullException(nameof(player));
                 if (Game.Players.Add(player))
-                    DomainEvents.Raise(new PlayerJoined() {PlayerId = player.PlayerId});
+                    DomainEvents.Raise(new PlayerJoined()
+                    {
+                        GameId = this.Game.Id,
+                        PlayerId = player.PlayerId
+                    });
             }
 
             public override void Start()

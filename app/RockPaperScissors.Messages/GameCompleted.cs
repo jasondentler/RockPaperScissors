@@ -1,6 +1,6 @@
 ﻿namespace RockPaperScissors.Messages
 {
-    public class GameCompleted : IEvent 
+    public class GameCompleted : IGameEvent 
     {
         public int GameId { get; set; }
     }

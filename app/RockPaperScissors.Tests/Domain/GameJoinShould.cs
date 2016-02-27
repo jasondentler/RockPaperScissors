@@ -71,7 +71,9 @@ namespace RockPaperScissors.Domain
             //Assert
             var e = DomainEvents.GetEvents().Single();
             e.Should().Be.OfType<PlayerJoined>();
-            ((PlayerJoined) e).PlayerId.Should().Be.EqualTo(player.PlayerId);
+            var pje = (PlayerJoined) e;
+            pje.PlayerId.Should().Be.EqualTo(player.PlayerId);
+            pje.GameId.Should().Be.EqualTo(game.Id);
         }
     }
 }

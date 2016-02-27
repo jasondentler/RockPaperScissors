@@ -47,8 +47,10 @@
     <Compile Include="ICreateCommand.cs" />
     <Compile Include="ICommand.cs" />
     <Compile Include="IEvent.cs" />
+    <Compile Include="IGameEvent.cs" />
     <Compile Include="IMediator.cs" />
     <Compile Include="IMessage.cs" />
+    <Compile Include="IPlayerEvent.cs" />
     <Compile Include="IQuery.cs" />
     <Compile Include="MessageConventions.cs" />
     <Compile Include="Moves.cs" />
