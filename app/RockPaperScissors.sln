@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 14
-VisualStudioVersion = 14.0.23107.0
+VisualStudioVersion = 14.0.24720.0
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RockPaperScissors.Domain", "RockPaperScissors.Domain\RockPaperScissors.Domain.csproj", "{6A398543-9CF1-460C-BABB-C510451455AA}"
 EndProject
@@ -10,6 +10,8 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RockPaperScissors.Tests", "RockPaperScissors.Tests\RockPaperScissors.Tests.csproj", "{ED37C2B7-ABF5-49A1-B84E-55DB5765D758}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RockPaperScissors.Tasks", "RockPaperScissors.Tasks\RockPaperScissors.Tasks.csproj", "{33D9DD3A-F09E-4553-9246-08AA205F7373}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RockPaperScissors.Tests.Acceptance", "RockPaperScissors.Tests.Acceptance\RockPaperScissors.Tests.Acceptance.csproj", "{065B6081-1BDE-4FCD-A1DE-AD2FE162F3D1}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -33,6 +35,10 @@ Global
 		{33D9DD3A-F09E-4553-9246-08AA205F7373}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{33D9DD3A-F09E-4553-9246-08AA205F7373}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{33D9DD3A-F09E-4553-9246-08AA205F7373}.Release|Any CPU.Build.0 = Release|Any CPU
+		{065B6081-1BDE-4FCD-A1DE-AD2FE162F3D1}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{065B6081-1BDE-4FCD-A1DE-AD2FE162F3D1}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{065B6081-1BDE-4FCD-A1DE-AD2FE162F3D1}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{065B6081-1BDE-4FCD-A1DE-AD2FE162F3D1}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
