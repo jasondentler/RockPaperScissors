@@ -1,7 +1,6 @@
 ﻿using System;
 using Coypu;
 using TechTalk.SpecFlow;
-using Coypu.NUnit;
 using SharpTestsEx;
 
 namespace RockPaperScissors.Tests.Acceptance.LetMeGoogleThatForYou

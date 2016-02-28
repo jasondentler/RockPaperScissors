@@ -1,6 +1,5 @@
 ﻿using BoDi;
 using Coypu;
-using Coypu.Drivers;
 using TechTalk.SpecFlow;
 
 namespace RockPaperScissors.Tests.Acceptance
