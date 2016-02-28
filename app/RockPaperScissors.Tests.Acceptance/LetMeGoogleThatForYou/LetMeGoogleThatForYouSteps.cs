@@ -66,6 +66,10 @@ namespace RockPaperScissors.Tests.Acceptance.LetMeGoogleThatForYou
         [Then(@"the url is ""(.*)""")]
         public void ThenTheUrlIs(string url)
         {
+            _page.Browser.TryUntil(
+                () => { },
+                () => _page.Browser.Location == new Uri(url),
+                TimeSpan.FromMinutes(0.5));
             _page.Browser.Location.Should().Be.EqualTo(new Uri(url));
         }
     }

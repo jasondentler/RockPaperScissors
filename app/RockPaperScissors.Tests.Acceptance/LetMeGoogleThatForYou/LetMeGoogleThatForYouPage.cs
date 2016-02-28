@@ -1,4 +1,5 @@
-﻿using Coypu;
+﻿using System;
+using Coypu;
 
 namespace RockPaperScissors.Tests.Acceptance.LetMeGoogleThatForYou
 {
@@ -13,9 +14,9 @@ namespace RockPaperScissors.Tests.Acceptance.LetMeGoogleThatForYou
             public const string SearchTextbox = "search-term";
             public const string SearchButton = "search";
             public const string LinkTextbox = "link input[type='text']";
-            public const string CopyButton = "a#copy";
-            public const string ShortenButton = "a#shorten";
-            public const string PreviewButton = "a#go";
+            public const string CopyButton = "copy";
+            public const string ShortenButton = "shorten";
+            public const string PreviewButton = "#go";
         }
 
         public void GoToPage()
@@ -46,7 +47,13 @@ namespace RockPaperScissors.Tests.Acceptance.LetMeGoogleThatForYou
 
         public ElementScope PreviewButton
         {
-            get { return Browser.FindCss(Locators.PreviewButton); }
+            get
+            {
+                return Browser.FindCss(Locators.PreviewButton, new Options()
+                {
+                    Timeout = TimeSpan.FromMinutes(0.5)
+                });
+            }
         }
 
     }
