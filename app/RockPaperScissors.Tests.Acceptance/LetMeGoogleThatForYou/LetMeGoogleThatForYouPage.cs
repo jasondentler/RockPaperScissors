@@ -13,9 +13,9 @@ namespace RockPaperScissors.Tests.Acceptance.LetMeGoogleThatForYou
             public const string SearchTextbox = "search-term";
             public const string SearchButton = "search";
             public const string LinkTextbox = "link input[type='text']";
-            public const string CopyButton = "copy";
-            public const string ShortenButton = "shorten";
-            public const string PreviewButton = "preview";
+            public const string CopyButton = "a#copy";
+            public const string ShortenButton = "a#shorten";
+            public const string PreviewButton = "a#go";
         }
 
         public void GoToPage()

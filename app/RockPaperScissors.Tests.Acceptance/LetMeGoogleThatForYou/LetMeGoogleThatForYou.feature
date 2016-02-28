@@ -11,3 +11,8 @@ Scenario: Get a link to a google search
 	And the shorten button is visible
 	And the preview button is visible
 
+Scenario: Navigate to link
+	Given I am on Let Me Google That For You
+	And I have searched for "How to troll my coworkers"
+	When I click Preview
+	Then the url is "https://www.google.com/search?btnG=1&pws=0&q=How+to+troll+my+coworkers&gws_rd=ssl"

@@ -1,4 +1,5 @@
-﻿using Coypu;
+﻿using System;
+using Coypu;
 using TechTalk.SpecFlow;
 using Coypu.NUnit;
 using SharpTestsEx;
@@ -49,6 +50,24 @@ namespace RockPaperScissors.Tests.Acceptance.LetMeGoogleThatForYou
         public void ThenThePreviewButtonIsVisible()
         {
             _page.PreviewButton.Exists();
+        }
+
+        [Given(@"I have searched for ""(.*)""")]
+        public void GivenIHaveSearchedFor(string searchTerms)
+        {
+            _page.Search(searchTerms);
+        }
+
+        [When(@"I click Preview")]
+        public void WhenIClickPreview()
+        {
+            _page.PreviewButton.Click();
+        }
+
+        [Then(@"the url is ""(.*)""")]
+        public void ThenTheUrlIs(string url)
+        {
+            _page.Browser.Location.Should().Be.EqualTo(new Uri(url));
         }
     }
 }
